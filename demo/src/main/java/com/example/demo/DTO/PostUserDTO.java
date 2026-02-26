@@ -9,6 +9,16 @@ public class PostUserDTO
 
     private String mobile;
 
+    public String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 public PostUserDTO()
 {}
 

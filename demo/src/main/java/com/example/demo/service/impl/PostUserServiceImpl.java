@@ -5,6 +5,7 @@ import com.example.demo.DTO.PostUserDTO;
 import com.example.demo.repository.PostUserRepository;
 import com.example.demo.service.PostUserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +19,13 @@ public class PostUserServiceImpl implements PostUserService
     ModelMapper modelMapper;
     PostUserRepository postUserRepository;
 
-    public PostUserServiceImpl(ModelMapper modelMapper,  PostUserRepository postUserRepository)
+    PasswordEncoder passwordEncoder;
+
+    public PostUserServiceImpl(ModelMapper modelMapper,  PostUserRepository postUserRepository , PasswordEncoder passwordEncoder)
     {
         this.modelMapper = modelMapper;
         this.postUserRepository = postUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -31,8 +35,8 @@ public class PostUserServiceImpl implements PostUserService
         String id =  UUID.randomUUID().toString();
         PostUser map = modelMapper.map(postUserDTO, PostUser.class);
         map.setId(id);
+        map.setPassword(passwordEncoder.encode(postUserDTO.getPassword())); // ✅
         PostUser save = postUserRepository.save(map);
-
         return modelMapper.map(save, PostUserDTO.class);
     }
 
@@ -79,4 +83,6 @@ public class PostUserServiceImpl implements PostUserService
         PostUser save = postUserRepository.save(postUser);
         return modelMapper.map(save, PostUserDTO.class);
     }
+
+
 }
